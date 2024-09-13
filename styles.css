@@ -1,0 +1,39 @@
+#optimized-video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  z-index: 9999;
+  background-color: white;
+}
+
+#left-menu-container {
+  width: 250px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f0f0f0;
+}
+
+#video-player-container {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+}
+
+#video-player-container video {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+/* 确保左侧菜单中的所有元素都可见 */
+#left-menu-container * {
+  display: block !important;
+  visibility: visible !important;
+}
