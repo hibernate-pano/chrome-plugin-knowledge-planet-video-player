@@ -3,13 +3,16 @@
   "name": "视频播放界面优化",
   "version": "1.0",
   "description": "优化 wx.zsxq.com 的视频播放界面布局",
-  "permissions": ["*://wx.zsxq.com/*"],
+  "permissions": [
+    "*://wx.zsxq.com/*",
+    "activeTab"
+  ],
   "content_scripts": [
     {
       "matches": ["*://wx.zsxq.com/*"],
       "js": ["content.js"],
       "css": ["styles.css"],
-      "run_at": "document_idle"
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": ["injected.js"]

@@ -37,3 +37,11 @@
   display: block !important;
   visibility: visible !important;
 }
+
+/* 尝试显示隐藏的元素 */
+#optimized-video-container [hidden],
+#optimized-video-container [style*="display: none"],
+#optimized-video-container [style*="visibility: hidden"] {
+  display: block !important;
+  visibility: visible !important;
+}

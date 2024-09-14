@@ -1,8 +1,11 @@
+console.log('Content script is running');
+
 function injectScript(code) {
   const script = document.createElement('script');
   script.textContent = code;
   (document.head || document.documentElement).appendChild(script);
   script.remove();
+  console.log('Script injected');
 }
 
 // 读取 injected.js 文件内容
