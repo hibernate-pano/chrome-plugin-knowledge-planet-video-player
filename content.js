@@ -1,14 +1,19 @@
-// 知识星球网页全屏插件 - 只让 video 元素全屏
+// 知识星球网页全屏插件 - 只让 video 元素全屏，并保留控制栏
 
 const fullscreenVideoClass = "fullscreen-plugin-active-video";
 let fullscreenVideo = null;
 let isFullscreen = false;
+let wasControls = false; // 记录原始controls状态
 
 function toggleFullscreen(video) {
   try {
     if (!isFullscreen) {
       fullscreenVideo = video;
       fullscreenVideo.classList.add(fullscreenVideoClass);
+
+      // 记录原始controls状态，并强制加上controls
+      wasControls = fullscreenVideo.hasAttribute('controls');
+      fullscreenVideo.setAttribute('controls', '');
 
       // 添加关闭按钮
       const closeBtn = document.createElement("div");
@@ -30,7 +35,11 @@ function toggleFullscreen(video) {
 
       isFullscreen = true;
     } else {
-      if (fullscreenVideo) fullscreenVideo.classList.remove(fullscreenVideoClass);
+      if (fullscreenVideo) {
+        fullscreenVideo.classList.remove(fullscreenVideoClass);
+        // 恢复controls状态
+        if (!wasControls) fullscreenVideo.removeAttribute('controls');
+      }
       const btn = document.getElementById("fullscreen-close-btn");
       if (btn) btn.remove();
       isFullscreen = false;
@@ -38,6 +47,7 @@ function toggleFullscreen(video) {
     }
   } catch (error) {
     if (fullscreenVideo) fullscreenVideo.classList.remove(fullscreenVideoClass);
+    if (!wasControls && fullscreenVideo) fullscreenVideo.removeAttribute('controls');
     const btn = document.getElementById("fullscreen-close-btn");
     if (btn) btn.remove();
     isFullscreen = false;
@@ -88,7 +98,7 @@ function initPlugin() {
       top: 0 !important;
       left: 0 !important;
       width: 100vw !important;
-      height: 100vh !important;
+      height: calc(100vh - 50px) !important; /* Leave space for controls */
       z-index: 10000 !important;
       margin: 0 !important;
       padding: 0 !important;
@@ -97,6 +107,19 @@ function initPlugin() {
       display: block !important;
       box-shadow: none !important;
       border: none !important;
+    }
+    
+    /* Ensure controls are visible and properly positioned */
+    .${fullscreenVideoClass} + .fullscreen-plugin-btn,
+    .${fullscreenVideoClass} ~ .controls,
+    .${fullscreenVideoClass} ~ .video-controls {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 50px !important;
+      z-index: 10001 !important;
+      background: rgba(0,0,0,0.7) !important;
     }
   `;
   document.head.appendChild(style);
