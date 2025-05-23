@@ -1,14 +1,14 @@
-// 知识星球网页全屏插件 - 最终轻量版
+// 知识星球网页全屏插件 - 只让 video 元素全屏
 
-const fullscreenClass = "fullscreen-plugin-active";
-let fullscreenContainer = null;
+const fullscreenVideoClass = "fullscreen-plugin-active-video";
+let fullscreenVideo = null;
 let isFullscreen = false;
 
-function toggleFullscreen(container) {
+function toggleFullscreen(video) {
   try {
     if (!isFullscreen) {
-      fullscreenContainer = container;
-      fullscreenContainer.classList.add(fullscreenClass);
+      fullscreenVideo = video;
+      fullscreenVideo.classList.add(fullscreenVideoClass);
 
       // 添加关闭按钮
       const closeBtn = document.createElement("div");
@@ -25,63 +25,57 @@ function toggleFullscreen(container) {
         border-radius: 4px;
         cursor: pointer;
       `;
-      closeBtn.addEventListener("click", () => toggleFullscreen(fullscreenContainer));
+      closeBtn.addEventListener("click", () => toggleFullscreen(fullscreenVideo));
       document.body.appendChild(closeBtn);
 
       isFullscreen = true;
-      console.log("[全屏插件] 全屏模式已激活");
     } else {
-      if (fullscreenContainer) fullscreenContainer.classList.remove(fullscreenClass);
+      if (fullscreenVideo) fullscreenVideo.classList.remove(fullscreenVideoClass);
       const btn = document.getElementById("fullscreen-close-btn");
       if (btn) btn.remove();
       isFullscreen = false;
-      fullscreenContainer = null;
-      console.log("[全屏插件] 已退出全屏模式");
+      fullscreenVideo = null;
     }
   } catch (error) {
-    if (fullscreenContainer) fullscreenContainer.classList.remove(fullscreenClass);
+    if (fullscreenVideo) fullscreenVideo.classList.remove(fullscreenVideoClass);
     const btn = document.getElementById("fullscreen-close-btn");
     if (btn) btn.remove();
     isFullscreen = false;
-    fullscreenContainer = null;
+    fullscreenVideo = null;
     console.error("[全屏插件] 全屏切换错误:", error);
   }
 }
 
 function addVideoControls(video) {
-  try {
-    if (video.dataset.fullscreenPluginProcessed) return;
-    video.dataset.fullscreenPluginProcessed = "true";
+  if (video.dataset.fullscreenPluginProcessed) return;
+  video.dataset.fullscreenPluginProcessed = "true";
 
-    const controlBar =
-      video.closest(".controls, .video-controls") ||
-      video.parentNode.querySelector(".controls, .video-controls");
+  const controlBar =
+    video.closest(".controls, .video-controls") ||
+    video.parentNode.querySelector(".controls, .video-controls");
 
-    const fsBtn = document.createElement("button");
-    fsBtn.className = "fullscreen-plugin-btn";
-    fsBtn.innerHTML = "⛶";
-    fsBtn.title = "网页全屏";
-    fsBtn.style.cssText = `
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      padding: 0 8px;
-      margin-left: 8px;
-    `;
+  const fsBtn = document.createElement("button");
+  fsBtn.className = "fullscreen-plugin-btn";
+  fsBtn.innerHTML = "⛶";
+  fsBtn.title = "网页全屏";
+  fsBtn.style.cssText = `
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0 8px;
+    margin-left: 8px;
+  `;
 
-    fsBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleFullscreen(video.parentElement);
-    });
+  fsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleFullscreen(video);
+  });
 
-    if (controlBar) {
-      controlBar.appendChild(fsBtn);
-    } else {
-      video.insertAdjacentElement("afterend", fsBtn);
-    }
-  } catch (error) {
-    console.error("[全屏插件] 添加控制按钮失败:", error);
+  if (controlBar) {
+    controlBar.appendChild(fsBtn);
+  } else {
+    video.insertAdjacentElement("afterend", fsBtn);
   }
 }
 
@@ -89,23 +83,20 @@ function initPlugin() {
   // 添加全屏样式
   const style = document.createElement("style");
   style.textContent = `
-    .${fullscreenClass} {
+    .${fullscreenVideoClass} {
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      background: #000 !important;
       z-index: 10000 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-    .${fullscreenClass} video {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: contain !important;
+      margin: 0 !important;
+      padding: 0 !important;
       background: #000 !important;
+      object-fit: contain !important;
+      display: block !important;
+      box-shadow: none !important;
+      border: none !important;
     }
   `;
   document.head.appendChild(style);
