@@ -15,23 +15,9 @@ function toggleFullscreen(video) {
       wasControls = fullscreenVideo.hasAttribute('controls');
       fullscreenVideo.setAttribute('controls', '');
 
-      // 添加关闭按钮
-      const closeBtn = document.createElement("div");
-      closeBtn.id = "fullscreen-close-btn";
-      closeBtn.textContent = "退出全屏";
-      closeBtn.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 10001;
-        padding: 8px 16px;
-        background: rgba(0,0,0,0.7);
-        color: white;
-        border-radius: 4px;
-        cursor: pointer;
-      `;
-      closeBtn.addEventListener("click", () => toggleFullscreen(fullscreenVideo));
-      document.body.appendChild(closeBtn);
+      // 移除原有的关闭按钮逻辑
+      // 添加 esc 监听
+      window.addEventListener('keydown', escListener);
 
       isFullscreen = true;
     } else {
@@ -40,19 +26,26 @@ function toggleFullscreen(video) {
         // 恢复controls状态
         if (!wasControls) fullscreenVideo.removeAttribute('controls');
       }
-      const btn = document.getElementById("fullscreen-close-btn");
-      if (btn) btn.remove();
+      // 移除 esc 监听
+      window.removeEventListener('keydown', escListener);
       isFullscreen = false;
       fullscreenVideo = null;
     }
   } catch (error) {
     if (fullscreenVideo) fullscreenVideo.classList.remove(fullscreenVideoClass);
     if (!wasControls && fullscreenVideo) fullscreenVideo.removeAttribute('controls');
-    const btn = document.getElementById("fullscreen-close-btn");
-    if (btn) btn.remove();
+    // 移除 esc 监听
+    window.removeEventListener('keydown', escListener);
     isFullscreen = false;
     fullscreenVideo = null;
     console.error("[全屏插件] 全屏切换错误:", error);
+  }
+}
+
+// esc 监听函数
+function escListener(e) {
+  if (isFullscreen && (e.key === 'Escape' || e.key === 'Esc')) {
+    toggleFullscreen(fullscreenVideo);
   }
 }
 
