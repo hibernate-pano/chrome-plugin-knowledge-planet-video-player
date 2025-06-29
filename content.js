@@ -57,10 +57,9 @@ function exitFullscreen() {
     if (!wasControls) fullscreenVideo.removeAttribute('controls');
   }
   
-  // 移除退出按钮
-  if (exitButton && exitButton.parentNode) {
-    exitButton.parentNode.removeChild(exitButton);
-    exitButton = null;
+  // 隐藏退出按钮
+  if (exitButton) {
+    exitButton.style.display = 'none';
   }
   
   // 移除 esc 监听
@@ -79,12 +78,17 @@ function createExitButton() {
   // 如果已存在，先移除
   if (exitButton && exitButton.parentNode) {
     exitButton.parentNode.removeChild(exitButton);
+    exitButton = null;
   }
   
+  // 创建新按钮
   exitButton = document.createElement("button");
   exitButton.className = "fullscreen-plugin-exit-btn";
   exitButton.innerHTML = "退出全屏";
   exitButton.title = "退出网页全屏";
+  
+  // 直接设置显示状态
+  exitButton.style.display = 'block';
   
   exitButton.addEventListener("click", () => {
     if (isFullscreen && fullscreenVideo) {
@@ -184,20 +188,10 @@ function showNotification(message, type = "info") {
   // 创建新通知
   const notification = document.createElement("div");
   notification.className = "fullscreen-plugin-notification";
+  if (type === "error") {
+    notification.classList.add("error");
+  }
   notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: ${type === "error" ? "rgba(255,0,0,0.7)" : "rgba(0,0,0,0.7)"};
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    z-index: 10005;
-    font-size: 14px;
-    transition: opacity 0.3s ease;
-  `;
   
   document.body.appendChild(notification);
   
