@@ -45,3 +45,96 @@
   display: block !important;
   visibility: visible !important;
 }
+
+/* 知识星球网页全屏插件 - 样式文件 */
+
+/* 全屏视频样式 */
+.fullscreen-plugin-active-video {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - 50px) !important; /* 为控制栏留出空间 */
+  z-index: 10000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #000 !important;
+  object-fit: contain !important;
+  display: block !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* 确保控制栏在全屏模式下可见且位置正确 */
+.fullscreen-plugin-active-video + .fullscreen-plugin-btn,
+.fullscreen-plugin-active-video ~ .controls,
+.fullscreen-plugin-active-video ~ .video-controls {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 50px !important;
+  z-index: 10001 !important;
+  background: rgba(0,0,0,0.7) !important;
+}
+
+/* 全屏按钮样式 */
+.fullscreen-plugin-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0 8px;
+  margin-left: 8px;
+  font-size: 16px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.fullscreen-plugin-btn:hover {
+  opacity: 1;
+}
+
+/* 退出全屏按钮 */
+.fullscreen-plugin-exit-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 10002;
+  font-size: 14px;
+  display: none;
+}
+
+.fullscreen-plugin-active-video ~ .fullscreen-plugin-exit-btn {
+  display: block;
+}
+
+/* 全屏模式下的动画效果 */
+@keyframes fullscreenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fullscreen-plugin-active-video {
+  animation: fullscreenFadeIn 0.3s ease;
+}
+
+/* 加载指示器 */
+.fullscreen-plugin-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 10px 20px;
+  border-radius: 4px;
+  display: none;
+  z-index: 10003;
+}
